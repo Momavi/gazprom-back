@@ -1,5 +1,6 @@
 const { prisma } = require('../prisma/prisma-client');
 const { getAllPosts, findUserById, handleError } = require('./postsHelper');
+
 const createPost = async (req, res) => {
   const { userId, message } = req.body;
   if ( !userId || !message ) {
@@ -52,7 +53,7 @@ const createComment = async (req, res) => {
       return res.status(400).json({ message: 'Failed to create comment' });
     }
   } catch ( error ) {
-    handleError(error);
+    return handleError(res, error);
   }
 };
 
@@ -65,7 +66,7 @@ const getPosts = async (req, res) => {
       return res.status(404).json({ message: 'Posts not found' });
     }
   } catch ( error ) {
-    handleError(error);
+    return handleError(res, error);
   }
 };
 
@@ -97,7 +98,7 @@ const deletePost = async (req, res) => {
       return res.status(404).json({ message: 'Posts not found' });
     }
   } catch ( error ) {
-    handleError(error);
+    return handleError(res, error);
   }
 };
 
@@ -117,7 +118,7 @@ const deleteComment = async (req, res) => {
     comment.user = await findUserById(comment.userId);
     return res.status(200).json(comment);
   } catch ( error ) {
-    handleError(error);
+    return handleError(res, error);
   }
 };
 

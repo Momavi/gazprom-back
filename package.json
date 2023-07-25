@@ -8,6 +8,7 @@
     "studio": "prisma studio"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@prisma/client": "^5.0.0",
     "bcrypt": "^5.1.0",
     "concurrently": "^8.0.1",
@@ -18,7 +19,8 @@
     "express": "~4.16.1",
     "express-rate-limit": "^6.7.1",
     "jsonwebtoken": "^9.0.0",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "pg": "^8.11.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.22",

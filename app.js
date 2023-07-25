@@ -13,8 +13,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use('/api/files', require('./routes/files'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/posts', require('./routes/posts'));
-app.use(require("./routes"));
+app.use('/api/email', require('./routes/email'));
 
 module.exports = app;

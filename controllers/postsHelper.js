@@ -8,7 +8,7 @@ const findUserById = async (id) => {
 // Helper function to handle errors
 const handleError = (res, error) => {
   console.error(error);
-  return res.status(500).json({ message: 'Внутренняя ошибка сервера' });
+  res.status(500).json({ message: 'Внутренняя ошибка сервера' });
 }
 
 // Helper function to get all posts
