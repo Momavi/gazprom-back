@@ -57,7 +57,9 @@ const getFile = async (req, res) => {
       console.log(err);
       return res.status(500).send('An error occurred while reading the file');
     }
-    res.send(data.split('\n'));
+    let dataToSend = data.split('\n')
+    console.log(dataToSend)
+    res.send(dataToSend);
   });
 };
 

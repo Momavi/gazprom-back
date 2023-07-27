@@ -1,9 +1,10 @@
 const { prisma } = require('../prisma/prisma-client');
 const brypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 function generateToken(user) {
-  return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '24h' });
+  return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '30d' });
 }
 
 function authenticateTokenCheck(req, res, next) {
@@ -34,10 +35,18 @@ const login = async (req, res) => {
       },
     });
 
-    const isPasswordCorrect = user &&
-        (await brypt.compare(password, user.password));
+    function hashWithMD5(password) {
+      const hash = crypto.createHash('md5');
+      hash.update(password);
+      return hash.digest('hex');
+    }
 
-    if ( user && isPasswordCorrect ) {
+    let hashedEnteredPassword = hashWithMD5(password);
+
+    // const isPasswordCorrect = user &&
+    //     (await brypt.compare(password, user.password));
+
+    if ( user && hashedEnteredPassword === user.password ) {
       res.status(200).json({
         ...user,
         token: generateToken(user),
@@ -71,8 +80,16 @@ const register = async (req, res) => {
         json({ message: 'Пользователь, с таким email уже существует' });
   }
 
-  const salt = await brypt.genSalt(10);
-  const hashedPassword = await brypt.hash(password, salt);
+  // const salt = await brypt.genSalt(10);
+  // const hashedPassword = await brypt.hash(password, salt);
+
+  function hashWithMD5(password) {
+    const hash = crypto.createHash('md5');
+    hash.update(password);
+    return hash.digest('hex');
+  }
+
+  let hashedPassword = hashWithMD5(password);
 
   const user = await prisma.user.create({
     data: {

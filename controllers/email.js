@@ -27,7 +27,7 @@ const createRandom = async (n) => {
 
 const createRandomEmails = async (req, res) => {
   const { number } = req.params;
-  console.log(number)
+  console.log(number);
   createRandom(number)  // Creates 100 random emails
       .then(() => {
         return res.status(200).json({ message: 'Все ок' });
@@ -58,7 +58,7 @@ const getEmails = async (req, res) => {
           subject: true,
           sentAt: true,
         },
-        take: 1000,
+        take: 100,
       });
       res.status(200).json(emails);
     }
@@ -70,22 +70,24 @@ const getEmails = async (req, res) => {
 const getEmail = (req, response) => {
   try {
     const { emailId } = req.params;
-    const text = 'SELECT * FROM public."Email" WHERE id = $1';
+    const text = `SELECT * FROM public."Email" WHERE id = '${emailId}'`;
 
-    pool.query(text, [emailId], (err, res) => {
-      if (err) {
+    pool.query(text, (err, res) => {
+      if ( err ) {
         console.log(err.stack);
       } else {
-        console.log(res);
-        if ( res.rows.length ) {
-          response.status(200).json(res.rows[0]?.body);
+        console.log(res, res.length);
+        if ( res.length > 1 ) {
+          return response.status(200).json(res);
+        } else if ( res.rows?.length === 1 ) {
+          return response.status(200).json(res.rows[0]?.body);
         } else {
-          response.status(200).json("Не удалось найти");
+          return response.status(200).json('Не удалось найти');
         }
       }
     });
   } catch ( error ) {
-    console.log(error)
+    console.log(error);
     response.status(500).json({ message: 'Внутренняя ошибка сервера', error });
   }
 };

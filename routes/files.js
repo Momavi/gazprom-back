@@ -1,11 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { getFiles, getFile } = require('../controllers/files');
+const { HomeFolder, getFile, getFolder, getFileInFolder } = require('../controllers/files');
 
 // /api/files/
-router.get('/', getFiles);
+router.get('/', HomeFolder);
 
-// /api/files/file/:name
-router.get('/:folder/:name', getFile);
+// /api/files/:name
+router.get('/file/:name', getFile);
+
+// /api/files/:folder
+router.get('/folder/:folder', getFolder);
+
+// /api/files/:folder
+router.post('/fileinfolder', getFileInFolder);
 
 module.exports = router;

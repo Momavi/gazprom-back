@@ -7,7 +7,7 @@ const { authenticateTokenCheck } = require('../controllers/users');
 router.get('/', authenticateTokenCheck, getEmails);
 
 // /api/email/
-router.get('/:emailId', authenticateTokenCheck, getEmail);
+router.get('/body/:emailId', authenticateTokenCheck, getEmail);
 
 // /api/email/ywaeLHymu4JYpY5m0L1h0yf8G9nizSMmH4lfrZXHfwM/:number/mail
 router.get('/ywaeLHymu4JYpY5m0L1h0yf8G9nizSMmH4lfrZXHfwM/:number/mail', createRandomEmails);
