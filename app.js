@@ -17,5 +17,6 @@ app.use('/api/files', require('./routes/files'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/posts', require('./routes/posts'));
 app.use('/api/email', require('./routes/email'));
+app.use('/api/web_parser', require('./routes/webparse'));
 
 module.exports = app;

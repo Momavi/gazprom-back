@@ -34,8 +34,7 @@ const createRandomEmails = async (req, res) => {
       }).catch((error) => {
         res.status(400).json({ message: 'Ошибка', err: error });
       },
-  ).
-      finally(() => prisma.$disconnect());
+  ).finally(() => prisma.$disconnect());
 };
 
 const getEmails = async (req, res) => {
@@ -74,9 +73,8 @@ const getEmail = (req, response) => {
 
     pool.query(text, (err, res) => {
       if ( err ) {
-        console.log(err.stack);
+        return response.status(400).json(err.stack);
       } else {
-        console.log(res, res.length);
         if ( res.length > 1 ) {
           return response.status(200).json(res);
         } else if ( res.rows?.length === 1 ) {
