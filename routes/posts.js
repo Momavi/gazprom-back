@@ -7,20 +7,21 @@ const {
   deletePost,
   deleteComment,
 } = require('../controllers/posts');
+const { authenticateTokenCheck } = require('../controllers/users');
 
 // /api/posts/
-router.post('/', createPost);
+router.post('/', authenticateTokenCheck, createPost);
 
 // /api/posts/post/comment
-router.post('/post/comment', createComment);
+router.post('/post/comment', authenticateTokenCheck, createComment);
 
 // /api/posts
-router.get('/', getPosts);
+router.get('/', authenticateTokenCheck, getPosts);
 
 // /api/posts/post
-router.delete('/:postId', deletePost);
+router.delete('/:postId', authenticateTokenCheck, deletePost);
 
 // /api/posts/post/comment
-router.delete('/:postId/comments/:commentId', deleteComment);
+router.delete('/:postId/comments/:commentId', authenticateTokenCheck, deleteComment);
 
 module.exports = router;

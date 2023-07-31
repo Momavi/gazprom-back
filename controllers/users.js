@@ -118,7 +118,10 @@ const reAuth = async (req, res) => {
     },
   });
 
-  reAuthUser.name = undefined;
+  if (!('name' in reAuthUser)) {
+    reAuthUser.name = undefined;
+  }
+
   res.status(200).json({
     ...reAuthUser,
     message: `Вы зашли под пользователем ${ reAuthUser.name }`,

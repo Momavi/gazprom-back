@@ -74,30 +74,44 @@ const deletePost = async (req, res) => {
   try {
     const { postId } = req.params;
 
-    console.log(postId);
-    if ( !postId ) {
-      return res.status(400).json({ message: 'Please provide post id' });
+    if (!postId) {
+      return res.status(400).json({ message: 'Введите post id' });
     }
 
+    // Find the post first
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+    });
+
+    // If the post does not exist, return an error
+    if (!post) {
+      return res.status(404).json({ message: 'Пост не найден' });
+    }
+
+    if (!('userId' in post)) {
+      post.userId = undefined;
+    }
+    // Check if the user is the owner of the post
+    if (post.userId !== req.user.id) {
+      return res.status(403).json({ message: 'У вас нет доступа' });
+    }
+
+    // If the user is the owner, proceed with the deletion
     await prisma.comment.deleteMany({
-      where: {
-        postId: postId,
-      },
+      where: { postId: postId },
     });
 
     await prisma.post.delete({
-      where: {
-        id: postId,
-      },
+      where: { id: postId },
     });
 
     const posts = await getAllPosts();
-    if ( posts ) {
+    if (posts) {
       res.status(200).json(posts);
     } else {
-      return res.status(404).json({ message: 'Posts not found' });
+      return res.status(404).json({ message: 'Посты не найдены' });
     }
-  } catch ( error ) {
+  } catch (error) {
     return handleError(res, error);
   }
 };
@@ -115,8 +129,16 @@ const deleteComment = async (req, res) => {
         id: commentId,
       },
     });
-    comment.user = await findUserById(comment.userId);
-    return res.status(200).json(comment);
+
+    const user = await findUserById(comment.userId);
+
+    // Modify the returned comment data to include the user details
+    const commentWithUser = {
+      ...comment,
+      user: user,
+    };
+
+    return res.status(200).json(commentWithUser);
   } catch ( error ) {
     return handleError(res, error);
   }
