@@ -47,6 +47,7 @@ const getEmails = async (req, res) => {
             contains: address,
           },
         },
+        take: 100,
       });
       res.status(200).json(emails);
     } else {
